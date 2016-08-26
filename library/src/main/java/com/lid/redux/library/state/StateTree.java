@@ -1,5 +1,7 @@
 package com.lid.redux.library.state;
 
+import com.lid.redux.library.Redux;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Collection;
@@ -22,14 +24,14 @@ public class StateTree {
         return this;
     }
 
-    public StateTree put(String name, State state) {
+    public synchronized StateTree put(String name, State state) {
         states.put(name, state);
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends State> T getState(String name) {
-        return (T)states.get(name);
+    public synchronized <T extends State> T getState(String name) {
+        return (T)states.get(Redux.getStateKey(name));
     }
 
     public void dump(FileDescriptor fd, PrintWriter writer, String[] args) {

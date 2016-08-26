@@ -2,12 +2,12 @@ package com.lid.redux.test;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lid.redux.library.Redux;
 import com.lid.redux.library.action.Action;
-import com.lid.redux.library.utils.L;
 import com.lid.redux.library.utils.RxBus;
 import com.lid.redux.library.utils.Tuple2;
 import com.lid.redux.test.state.LocationState;
@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
-                        for (int i=0;i<100;i++) {
-                            App.store.dispatch(Action.makeSyncRequestAction(i+"",Define.ACTION_PROGRESS_NAME).put("add", true));
-                        }
+                        App.store.dispatch(Action.makeSyncRequestAction(Define.ACTION_PROGRESS_NAME).put("add", true));
                     }
                 }));
 
@@ -59,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
-//                        for (int i=0;i<100;i++) {
-                            App.store.dispatch(Action.makeAsyncRequestAction(Define.ACTION_LOCATION_NAME).put("city", "上海市"));
-//                        }
+                        App.store.dispatch(Action.makeAsyncRequestAction(Define.ACTION_LOCATION_NAME).put("city", "上海市"));
                     }
                 }));
 
@@ -73,22 +69,21 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void call(Tuple2 tuple2) {
                         Action action = (Action)tuple2._2;
-                        if (action.isResponse() && action.getCode() == 0) {
+                        if (action.isResponse()) {
                             if (action.getName().equals(Define.ACTION_PROGRESS_NAME)) {
                                 ProgressState progressState = (ProgressState)tuple2._1;
-                                //L.i("redux", "<-- " + action.toString() + " -- " + progressState.getProgress());
                                 progressBar.setProgress(progressState.getProgress());
                             } else if (action.getName().equals(Define.ACTION_LOCATION_NAME)) {
                                 LocationState locationState = (LocationState)tuple2._1;
                                 resultTextView.setText(locationState.getContent());
-                                L.i("redux", "<-- " + action.toString());
                             }
+                            Log.i("redux", "<-- " + action.toString());
                         }
                     }
                 }));
 
         progressBar = (ProgressBar)findViewById(R.id.progress);
-        ProgressState progressState = App.store.getState().getState(Redux.getStateKey(Define.ACTION_PROGRESS_NAME));
+        ProgressState progressState = App.store.getStateTree().getState(Define.ACTION_PROGRESS_NAME);
         progressBar.setProgress(progressState.getProgress());
 
         compositeSubscription.add(RxView.clicks(progressBar)

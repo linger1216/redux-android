@@ -1,8 +1,6 @@
 package com.lid.redux.test.state;
 
 import com.lid.redux.library.state.State;
-import com.lid.redux.library.utils.L;
-
 
 /**
  * Created by tuyou on 16/6/17.

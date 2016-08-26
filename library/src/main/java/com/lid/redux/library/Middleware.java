@@ -8,5 +8,5 @@ import com.lid.redux.library.action.Action;
 
 public interface Middleware {
     void dispatch(Store store, Action action);
-    void dump();
+    void destroy();
 }

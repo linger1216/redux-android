@@ -50,9 +50,10 @@ public class AirMiddleware implements Middleware {
     }
 
     @Override
-    public void dump() {
+    public void destroy() {
 
     }
+
 
     private Observable<String> request(final String city) {
         return Observable.create(new Observable.OnSubscribe<String>() {

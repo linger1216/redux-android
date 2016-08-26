@@ -1,11 +1,10 @@
 package com.lid.redux.library;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.lid.redux.library.action.Action;
-import com.lid.redux.library.utils.ACache;
-import com.lid.redux.library.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +24,16 @@ public class DefaultLogMiddleware implements Middleware {
 
     @Override
     public void dispatch(final Store store, final Action action) {
-        L.i("redux", "--> " + action.toString());
+        Log.d("redux", "--> " + action.toString());
         if (Redux.DEBUG) {
             actions.add(action);
         }
     }
 
     @Override
-    public void dump() {
+    public void destroy() {
         if (actions!=null && !actions.isEmpty()) {
-            ACache.get(_context).put("actions", new Gson().toJson(actions));
+            // save actions to local file or db or sth.
         }
     }
 }

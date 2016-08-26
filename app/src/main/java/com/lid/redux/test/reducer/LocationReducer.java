@@ -17,13 +17,13 @@ public class LocationReducer implements Reducer {
     @Override
     public Tuple2<State, Action> call(Action action, final StateTree state) {
         if (action.isSync() && action.isRequest() && action.getName().equals(Define.ACTION_LOCATION_NAME)){
-            LocationState locationState =  state.getState(Redux.getStateKey(action.getName()));
+            LocationState locationState =  state.getState(action.getName());
             if (action.getCode() >= 0) {
                 String content = action.get("content");
                 locationState.setContent(content);
-                Action.makeResponseAction(action, "success", 0);
+                Action.makeResponseAction(action, true, 0, "success");
             } else {
-                Action.makeResponseAction(action, "failed", action.getCode());
+                Action.makeResponseAction(action, false, action.getCode(), "failed");
             }
             return new Tuple2<>(locationState.clone(), action);
         }

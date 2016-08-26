@@ -16,7 +16,7 @@ public class ProgressReducer implements Reducer {
     @Override
     public Tuple2<State, Action> call(Action action, StateTree state) {
         if (action.isSync() && action.isRequest() && action.getName().equals(Define.ACTION_PROGRESS_NAME)) {
-            ProgressState progressState = state.getState(Redux.getStateKey(action.getName()));
+            ProgressState progressState = state.getState(action.getName());
             boolean isAdd = action.get("add");
             int level = isAdd ? progressState.getProgress() + 1 : progressState.getProgress() - 1;
             if (level >= 100) {
@@ -26,7 +26,7 @@ public class ProgressReducer implements Reducer {
                 level = 0;
             }
             progressState.setProgress(level);
-            return new Tuple2<>(progressState.clone(), Action.makeResponseAction(action,"success", 0));
+            return new Tuple2<>(progressState.clone(), Action.makeResponseAction(action,true, 0, "success"));
         }
         return null;
     }
